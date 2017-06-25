@@ -19,7 +19,7 @@ app = Flask(__name__)
 manager = Manager(app)
 bootstrap = Bootstrap(app)#教程貌似没跟我说要加这段啊！
 moment = Moment(app)#这种把函数套一层的手法是啥意思啊，让函数内获得新的方法？
-app.config.from_object('config') #密钥类设置不能开源
+app.config.from_object('config') #密钥类设置不能开源存入config.py
 #SECRET_KEY
 #SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True #True无需session.commit()即可直接操作写入数据库
