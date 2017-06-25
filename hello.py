@@ -22,12 +22,13 @@ moment = Moment(app)#这种把函数套一层的手法是啥意思啊，让函�
 app.config.from_object('config') #密钥类设置不能开源存入config.py
 #SECRET_KEY
 #SQLALCHEMY_DATABASE_URI
+#MAIL_USERNAME
+#MAIL_PASSWORD
+#FLASKY_ADMIN
+#FLASKY_MAIL_SENDER
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True #True无需session.commit()即可直接操作写入数据库
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['FLASKY_MAIL_SUBJECT_PREFIX'] = '[Flasky]'
-app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-app.config['FLASKY_ADMIN'] = os.environ.get('FLASKY_ADMI')
 
 
 mydb = SQLAlchemy(app)
