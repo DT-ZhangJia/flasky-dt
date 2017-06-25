@@ -20,13 +20,13 @@ app = Flask(__name__)
 manager = Manager(app)
 bootstrap = Bootstrap(app)#教程貌似没跟我说要加这段啊！
 moment = Moment(app)#这种把函数套一层的手法是啥意思啊，让函数内获得新的方法？
-#app.config.from_object('config') #密钥类设置不能开源存入config.py
-app.config['SECRET_KEY'] = config['SECRET_KEY']
-app.config['SQLALCHEMY_DATABASE_URI'] = config['SQLALCHEMY_DATABASE_URI']
-app.config['MAIL_USERNAME'] = config['MAIL_USERNAME']
-app.config['MAIL_PASSWORD'] = config['MAIL_PASSWORD']
-app.config['FLASKY_ADMIN'] = config['FLASKY_ADMIN']
-app.config['FLASKY_MAIL_SENDER'] = config['FLASKY_MAIL_SENDER']
+app.config.from_object('config') #密钥类设置不能开源存入config.py
+#SECRET_KEY
+#SQLALCHEMY_DATABASE_URI
+#MAIL_USERNAME
+#MAIL_PASSWORD
+#FLASKY_ADMIN
+#FLASKY_MAIL_SENDER
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True #True无需session.commit()即可直接操作写入数据库
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['FLASKY_MAIL_SUBJECT_PREFIX'] = '[Flasky]'
