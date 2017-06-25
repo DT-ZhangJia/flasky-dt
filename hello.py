@@ -2,7 +2,7 @@
 learn flask
 """
 # pylint: disable=invalid-name
-
+import os
 from flask_bootstrap import Bootstrap #得先导入Bootsrtap
 from flask_script import Manager, Shell
 from flask import Flask, url_for, redirect, request, render_template, session, flash
@@ -24,6 +24,10 @@ app.config.from_object('config') #密钥类设置不能开源存入config.py
 #SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True #True无需session.commit()即可直接操作写入数据库
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['FLASKY_MAIL_SUBJECT_PREFIX'] = '[Flasky]'
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['FLASKY_ADMIN'] = os.environ.get('FLASKY_ADMI')
 
 
 mydb = SQLAlchemy(app)
@@ -36,6 +40,9 @@ manager.add_command("shell", Shell(make_context=make_shell_context))#不明白�
 
 migrate = Migrate(app, mydb)
 manager.add_command('sdb', MigrateCommand)
+
+
+
 
 class NameForm(FlaskForm):
     indexname = StringField('填写你的ID：', validators=[Required()]) #NameForm类的所有实例共享该变量
@@ -61,7 +68,12 @@ class User(mydb.Model):
         return '<User %r>' % self.username
 
 
-
+def send_email(to, subject, template, **kwargs):
+    msg = Message(app.config['FLASKY_MAIL_SUBJECT_PREFIX'] + subject,
+                  sender=app.config['FLASKY_MAIL_SENDER'], recipients=[to])
+    msg.body = render_template(template + '.txt', **kwargs)
+    msg.html = render_template(template + '.html', **kwargs)
+    mail.send(msg)
 
 
 
@@ -77,6 +89,8 @@ def index():
             session['exist'] = False
             newuser = User(username=pyform.indexname.data, role_id=3)#建立新用户记录
             mydb.session.add(newuser)#新记录写入数据库操作
+            #if app.config['FLASKY_ADMIN']:#通知管理员新用户
+            send_email(app.config['FLASKY_ADMIN'], 'New User', 'mail/new_user', mailuser=newuser)
         else:
             session['exist'] = True
         old_name = session.get('pyname')
