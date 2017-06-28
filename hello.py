@@ -14,13 +14,15 @@ from wtforms.validators import Required
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, MigrateCommand
 from flask_mail import Mail, Message
-from config import config
+#from config import config
 
 app = Flask(__name__)
 manager = Manager(app)
 bootstrap = Bootstrap(app)#教程貌似没跟我说要加这段啊！
 moment = Moment(app)#这种把函数套一层的手法是啥意思啊，让函数内获得新的方法？
-app.config.from_object('config') #密钥类设置不能开源存入config.py
+#app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME') 
+#app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD') 
+app.config.from_pyfile('config.py') #密钥类设置不能开源存入config.py
 #SECRET_KEY
 #SQLALCHEMY_DATABASE_URI
 #MAIL_USERNAME
@@ -31,6 +33,9 @@ app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True #True无需session.commit()�
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['FLASKY_MAIL_SUBJECT_PREFIX'] = '[Flasky]'
 
+
+#app.config.from_object(config['MAIL_USERNAME'])
+#app.config.from_object(config['MAIL_PASSWORD'])
 
 mydb = SQLAlchemy(app)
 mail = Mail(app)
